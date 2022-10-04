@@ -23,17 +23,37 @@ const options = {
   },
 ];
 
-inquirer.prompt(questions).then((answers) => {
-  if (answers.init === options.create) {
-    create();
-  } else if (answers.init === options.read) {
+// get flags
+const args = process.argv.slice(2);
+const arg = args[0];
+
+const mainMenu = () => {
+  inquirer.prompt(questions).then((answers) => {
+    if (answers.init === options.create) {
+      create();
+    } else if (answers.init === options.read) {
+      read();
+    } else if (answers.init === options.start) {
+      start();
+    } else if (answers.init === options.finish) {
+      finish();
+    }
+  });
+}
+
+// check for flags
+if (arg) {  
+  if (["read","r"].includes(arg)) {
     read();
-  } else if (answers.init === options.start) {
+  } else if (["new","n"].includes(arg)) {
+    create();
+  } else if (["start","s"].includes(arg)) {
     start();
-  } else if (answers.init === options.finish) {
+  } else if (["finish","f"].includes(arg)) {
     finish();
   } else {
-    console.log("\nOrder receipt:");
-    console.log(JSON.stringify(answers, null, "  "));
+    mainMenu()
   }
- });
+} else {
+  mainMenu()
+}

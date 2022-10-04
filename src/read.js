@@ -6,6 +6,7 @@ const currentBooks = await getCurrentBooks();
 const questions = [
   {
     type: "list",
+    message: "What book did you read?",
     name: "title",
     choices: currentBooks.map(book => book.title),
   },

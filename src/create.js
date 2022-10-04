@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import fetch from 'node-fetch';
-import { downloadThumbnail, addBook } from './helpers.js';
+import { downloadThumbnail, addBook, getFilename } from './helpers.js';
 
 const questions = [
   {
@@ -26,14 +26,10 @@ export default function () {
     }
 
     if (data.cover.medium) {
-      const fileName =
-      data.title
-        .split(" ")
-        .map((word) => word[0].toUpperCase() + word.substring(1))
-        .join("") + ".jpg";
+      const filename = getFilename(data.title)
       
-      await downloadThumbnail(data.cover.medium, fileName);
-      newBook.image = fileName
+      await downloadThumbnail(data.cover.medium, filename);
+      newBook.image = filename
     }
 
     if (data.subtitle) {

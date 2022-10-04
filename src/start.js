@@ -9,6 +9,7 @@ const unstartedBooks = await getUnstartedBooks();
 const questions = [
   {
     type: "list",
+    "message": "What book did you start?",
     name: "title",
     choices: unstartedBooks.map(book => book.title),
   },
@@ -19,7 +20,7 @@ const questions = [
     format: ['m', '/', 'd', '/', 'yy']
   },
   {
-    type: 'input',
+    type: 'number',
     name: 'page',
     message: 'What page are you on?',
     validate(value) {
