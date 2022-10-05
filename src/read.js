@@ -1,37 +1,29 @@
-import inquirer from 'inquirer';
-import {getCurrentBooks, updateBook} from "./helpers.js"
+import inquirer from "inquirer";
+import {
+	getCurrentBooks,
+	updateBook,
+	appendGitStatus,
+	deployPrompt,
+} from "./helpers.js";
+import { readMain, readResponse } from "./questions.js";
 
 const currentBooks = await getCurrentBooks();
 
-const questions = [
-  {
-    type: "list",
-    message: "What book did you read?",
-    name: "title",
-    choices: currentBooks.map(book => book.title),
-  },
-  {
-    type: 'input',
-    name: 'page',
-    message: 'What page are you on?',
-    validate(value) {
-      const valid = !isNaN(parseFloat(value));
-      return valid || 'Please enter a number';
-    },
-    filter: Number,
-  },
-];
-
 export default function () {
-  inquirer.prompt(questions).then(async (answers) => {
-
-    const bookToUpdate = currentBooks.find(book => book.title === answers.title);
-
-    const updatedBook = {
-      ...bookToUpdate,
-      progress: answers.page,
-    }
-
-    await updateBook(updatedBook); 
-  })
+	inquirer
+		.prompt(readMain(currentBooks))
+		.then(async (answers) => {
+			return currentBooks.find((book) => book.title === answers.title);
+		})
+		.then(async (book) =>
+			inquirer.prompt(readResponse(book)).then(async (answers) => {
+				const updatedBook = {
+					...book,
+					progress: answers.page,
+				};
+				await updateBook(updatedBook);
+				await appendGitStatus(`read "${updatedBook.title}"`);
+			})
+		)
+		.then(() => deployPrompt());
 }

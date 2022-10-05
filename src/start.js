@@ -1,48 +1,35 @@
-import inquirer from 'inquirer';
-import {getUnstartedBooks, updateBook} from "./helpers.js"
+import inquirer from "inquirer";
+import {
+	appendGitStatus,
+	getUnstartedBooks,
+	updateBook,
+	deployPrompt,
+} from "./helpers.js";
+import { startMain, startResponse } from "./questions.js";
+import datePrompt from "inquirer-datepicker-prompt";
 
-import datePrompt from "inquirer-datepicker-prompt"
 inquirer.registerPrompt("datetime", datePrompt);
 
 const unstartedBooks = await getUnstartedBooks();
 
-const questions = [
-  {
-    type: "list",
-    "message": "What book did you start?",
-    name: "title",
-    choices: unstartedBooks.map(book => book.title),
-  },
-  {
-    type: 'datetime',
-    name: 'date',
-    message: 'When did you start?',
-    format: ['m', '/', 'd', '/', 'yy']
-  },
-  {
-    type: 'number',
-    name: 'page',
-    message: 'What page are you on?',
-    validate(value) {
-      const valid = !isNaN(parseFloat(value));
-      return valid || 'Please enter a number';
-    },
-    filter: Number,
-  },
-];
-
 export default function () {
-  inquirer.prompt(questions).then(async (answers) => {
+	inquirer
+		.prompt(startMain(unstartedBooks))
+		.then(async (answers) => {
+			return unstartedBooks.find((book) => book.title === answers.title);
+		})
+		.then(async (book) =>
+			inquirer.prompt(startResponse(book)).then(async (answers) => {
+				const date = answers.date.toISOString().split("T")[0];
+				const updatedBook = {
+					...book,
+					progress: answers.page,
+					dateStart: date,
+				};
 
-    const bookToUpdate = unstartedBooks.find(book => book.title === answers.title);
-    const date = answers.date.toISOString().split("T")[0];
-
-    const updatedBook = {
-      ...bookToUpdate,
-      progress: answers.page,
-      dateStart: date,
-    }
-
-    await updateBook(updatedBook); 
-  })
+				await updateBook(updatedBook);
+				await appendGitStatus(`started "${updatedBook.title}"`);
+			})
+		)
+		.then(() => deployPrompt());
 }

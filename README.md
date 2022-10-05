@@ -13,17 +13,17 @@ Not quite sure yet. From this git directory I just ran `npm i -g`. Not sure if I
 ## Usage
 
 ```shell
-$ site-cli
+$ book
 ```
 From here it will ask you what you did.
 
 ### Bought a book
 
   ```shell
-  $ site-cli nre
+  $ book new
   ```
   ```shell 
-  $ site-cli n
+  $ book n
   ```
 
 This doesn't yet _start_ a book, just get it on the proverbial nightstand! It asks for an ISBN number. From here it will download all of the necessary data and add the book.
@@ -33,10 +33,10 @@ It will see if it can grab an image for the cover. It will download the image, r
 ### Start a book
 
   ```shell
-  $ site-cli start
+  $ book start
   ```
   ```shell 
-  $ site-cli s
+  $ book s
   ```
 
 I've picked up a new book, cracked it open and started a few pages.
@@ -46,10 +46,10 @@ The will look at all of the books I have not yet started, move it to the "curren
 ### Read a book
 
   ```shell
-  $ site-cli read
+  $ book read
   ```
   ```shell 
-  $ site-cli r
+  $ book r
   ```
 
 This will look at all of the books I am in the middle of and ask which book and where I'm at.
@@ -57,20 +57,42 @@ This will look at all of the books I am in the middle of and ask which book and 
 ### Finish a book
 
   ```shell
-  $ site-cli finish
+  $ book finish
   ```
   ```shell 
-  $ site-cli f
+  $ book f
   ```
 
 This will move a book to the "finished" state, and log the necessary things. Next I need it to do some sort of happy dance!
 
+### Git log
+
+  ```shell
+  $ book log
+  ```
+
+See what will be in the git log
+
+### Git clear
+
+  ```shell
+  $ book clear
+  ```
+
+Clear what will is in the git log
+
+### Deploy
+
+  ```shell
+  $ book deploy
+  ```
+
+This will bundle all of the past changes and `git push`. Because of the way I made things it will also deploy on Netlify
 
 ## Todo
 
-- [] add celebration when I finish a book
-- [] add validations/error checking so I don't mess up
-- [] add option for `git commit` and `git push`
-- [] rename CLI to something like `read` or `book` 
+- [] finish > ask to leave a review/rating
 - [] hook to update GoodReads?
- 
+- [] start > "____, Good choice!"
+- [] netlify notification
+- [] error checking for each step

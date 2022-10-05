@@ -1,38 +1,24 @@
 import inquirer from 'inquirer';
-import {getCurrentBooks, updateBook} from "./helpers.js";
+import {appendGitStatus, getCurrentBooks, updateBook, deployPrompt} from "./helpers.js";
+import { finishMain } from "./questions.js";
 
 import datePrompt from "inquirer-datepicker-prompt"
 inquirer.registerPrompt("datetime", datePrompt);
 
 const currentBooks = await getCurrentBooks();
 
-const questions = [
-  {
-    type: "list",
-    message: "What book did you finish?",
-    name: "title",
-    choices: currentBooks.map(book => book.title),
-  },
-  {
-    type: 'datetime',
-    name: 'date',
-    message: 'When did you finish?',
-    format: ['m', '/', 'd', '/', 'yy']
-  },
-];
-
 export default function () {
-  inquirer.prompt(questions).then(async (answers) => {
-
-    const bookToUpdate = currentBooks.find(book => book.title === answers.title);
-    const date = answers.date.toISOString().split("T")[0];
-    delete bookToUpdate.progress;
-
-    const updatedBook = {
-      ...bookToUpdate,
-      dateFinish: date,
-    }
-
-    await updateBook(updatedBook);
- })
+  inquirer
+    .prompt(finishMain(currentBooks))
+    .then(async (answers) => {
+      const book = currentBooks.find(book => book.title === answers.title);
+      const date = answers.date.toISOString().split("T")[0];
+      delete book.progress;
+      const updatedBook = {
+        ...book,
+        dateFinish: date,
+      }
+      await updateBook(updatedBook);
+      await appendGitStatus(`finished "${book.title}"`);
+  }).then(() => deployPrompt());
 }

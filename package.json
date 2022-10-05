@@ -1,5 +1,5 @@
 {
-  "name": "site-cli",
+  "name": "book",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -13,12 +13,14 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^5.0.1",
+    "cli-confetti": "^1.1.0",
     "imagemin": "^8.0.1",
     "imagemin-jpegtran": "^7.0.0",
     "inquirer": "^9.1.2",
     "inquirer-date-prompt": "^2.0.1",
     "inquirer-datepicker-prompt": "^0.4.3",
     "node-fetch": "^3.2.10",
-    "sharp": "^0.31.1"
+    "sharp": "^0.31.1",
+    "simple-git": "^3.14.1"
   }
 }
