@@ -8,6 +8,7 @@ import start from "./start.js";
 import { clearGitPrompt, commit, deployPrompt, gitLog } from "./helpers.js";
 import { initMain } from "./questions.js";
 import confetti from "./confetti.js";
+
 const options = {
 	create: "Bought a new book",
 	start: "Started a book",

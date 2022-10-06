@@ -1,5 +1,4 @@
 // Main
-
 export const initMain = (options) => {
 	return [
 		{
@@ -60,7 +59,7 @@ export const startResponse = (book) => {
 		{
 			type: "number",
 			name: "page",
-			message: "What page are you on?",
+			message: `What page are you on? [${book.progress}/${book.pages}]`,
 			validate(value) {
 				const validNum = !isNaN(parseFloat(value));
 				if (!validNum) return "Please enter a number";
@@ -91,7 +90,7 @@ export const readResponse = (book) => {
 		{
 			type: "input",
 			name: "page",
-			message: "What page are you on?",
+			message: `What page are you on? [${book.progress}/${book.pages}]`,
 			validate(value) {
 				const validNum = !isNaN(parseFloat(value));
 				if (!validNum) return "Please enter a number";
@@ -122,6 +121,18 @@ export const finishMain = (books) => {
 			date: {
 				max: new Date().toISOString().split("T")[0],
 			},
+		},
+		{
+			type: "number",
+			name: "stars",
+			message: "How many stars would you give it?",
+			validate(value) {
+				const validNum = !isNaN(parseFloat(value));
+				if (!validNum) return "Please enter a number";
+				if (value < 0 && value > 5 ) return "Must be 1-5";
+				return validNum;
+			},
+			filter: Number,
 		},
 	];
 };

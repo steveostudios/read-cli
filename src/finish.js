@@ -16,6 +16,7 @@ export default function () {
       delete book.progress;
       const updatedBook = {
         ...book,
+        stars: answers.stars,
         dateFinish: date,
       }
       await updateBook(updatedBook);

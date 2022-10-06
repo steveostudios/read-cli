@@ -8,11 +8,12 @@ import { config } from "./config.js";
 import simpleGit from "simple-git";
 import { gitMain, gitClear } from "./questions.js";
 import inquirer from "inquirer";
+import appRoot from "app-root-path"
 import confetti from "./confetti.js";
 
 const repoPath = config.repoPath;
 const booksPath = path.join(repoPath, "src/_data/books.json");
-const gitStatusPath = "src/gitstatus.txt";
+const gitStatusPath = path.join(appRoot.path, "src/gitstatus.txt");
 
 // download, resize, compress, and save image
 export const downloadThumbnail = async (url, fileName) => {
@@ -38,6 +39,7 @@ export const downloadThumbnail = async (url, fileName) => {
 export const getFilename = (title) => {
 	return (
 		title
+			.replace(/\W/g, '')
 			.split(" ")
 			.map((word) => word[0].toUpperCase() + word.substring(1))
 			.join("") + ".jpg"

@@ -43,6 +43,7 @@ export default function () {
 				if (answers.response) {
 					if (book.image) {
 						await downloadThumbnail(book.imageURL, book.image);
+						delete book.imageURL;
 					}
 					await addBook(book);
 					await appendGitStatus(`added "${book.title}"`);
