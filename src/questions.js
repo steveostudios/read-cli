@@ -59,7 +59,7 @@ export const startResponse = (book) => {
 		{
 			type: "number",
 			name: "page",
-			message: `What page are you on? [${book.progress}/${book.pages}]`,
+			message: `What page are you on? [0/${book.pages}]`,
 			validate(value) {
 				const validNum = !isNaN(parseFloat(value));
 				if (!validNum) return "Please enter a number";
