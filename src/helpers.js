@@ -147,3 +147,9 @@ export const gitLog = async () => {
   });
   console.log(gitMessage);
 };
+
+// list pages of current books
+export const status = async () => {
+	const books = await getCurrentBooks();
+	console.log(books.map(book => `${book.title} - ${book.progress}/${book.pages}`).join('\n\r'))
+}

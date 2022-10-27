@@ -5,7 +5,7 @@ import create from "./create.js";
 import finish from "./finish.js";
 import read from "./read.js";
 import start from "./start.js";
-import { clearGitPrompt, commit, deployPrompt, gitLog } from "./helpers.js";
+import { clearGitPrompt, commit, deployPrompt, gitLog, status } from "./helpers.js";
 import { initMain } from "./questions.js";
 import confetti from "./confetti.js";
 
@@ -50,6 +50,8 @@ if (arg) {
 		clearGitPrompt();
   } else if (["log"].includes(arg)) {
 		gitLog();
+	} else if (["status"].includes(arg)) {
+		status()
   } else if (["test"].includes(arg)) {
     confetti();
 	} else {
