@@ -23,6 +23,24 @@ export const createMain = () => {
 	];
 };
 
+export const createAdditionalInfo = (book) => {
+	const questions = [];
+	const pages = {
+		type: "number",
+		name: "pages",
+		message: "Missing Pages: How many pages are there?",
+	};
+	const imageURL = {
+		type: "string",
+		name: "imageURL",
+		message: "Missing Image: Where is an image I can use?",
+	};
+	if (!book.number_of_pages) questions.push(pages);
+	if (!book?.cover?.medium) questions.push(imageURL);
+
+	return questions;
+};
+
 export const createResponse = (book) => {
 	return [
 		{
@@ -129,7 +147,7 @@ export const finishMain = (books) => {
 			validate(value) {
 				const validNum = !isNaN(parseFloat(value));
 				if (!validNum) return "Please enter a number";
-				if (value < 0 && value > 5 ) return "Must be 1-5";
+				if (value < 0 && value > 5) return "Must be 1-5";
 				return validNum;
 			},
 			filter: Number,

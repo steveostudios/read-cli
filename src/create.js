@@ -6,8 +6,13 @@ import {
 	addBook,
 	getFilename,
 	deployPrompt,
+	titleCase,
 } from "./helpers.js";
-import { createMain, createResponse } from "./questions.js";
+import {
+	createAdditionalInfo,
+	createMain,
+	createResponse,
+} from "./questions.js";
 
 export default function () {
 	inquirer
@@ -20,23 +25,31 @@ export default function () {
 			);
 			const json = await response.json();
 			const data = json[`ISBN:${isbn}`];
-			const book = {
-				isbn: isbn,
-				pages: data.number_of_pages,
-				title: data.title,
-				authors: data.authors.map((item) => item.name).join(", "),
-			};
-			// if there is an image, add it
-			if (data.cover.medium) {
-				const filename = getFilename(data.title);
-				book.imageURL = data.cover.medium;
-				book.image = filename;
-			}
-			// if there is a subtitle, add it
-			if (data.subtitle) {
-				book.subtitle = data.subtitle;
-			}
-			return book;
+
+			return { isbn: isbn, ...data };
+		})
+		.then(async (data) => {
+			return await inquirer
+				.prompt(createAdditionalInfo(data))
+				.then((answers) => {
+					const title = titleCase(data.title);
+					const filename = getFilename(title);
+
+					const book = {
+						isbn: data.isbn,
+						title: title,
+						authors: data.authors.map((item) => item.name).join(", "),
+						pages: data.number_of_pages || answers.pages,
+						imageURL: data?.cover?.medium || answers.imageURL,
+						image: filename,
+					};
+
+					if (data.subtitle) {
+						book.subtitle = titleCase(data.subtitle);
+					}
+
+					return book;
+				});
 		})
 		.then(async (book) =>
 			inquirer.prompt(createResponse(book)).then(async (answers) => {

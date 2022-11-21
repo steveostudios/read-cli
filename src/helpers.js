@@ -8,7 +8,7 @@ import { config } from "./config.js";
 import simpleGit from "simple-git";
 import { gitMain, gitClear } from "./questions.js";
 import inquirer from "inquirer";
-import appRoot from "app-root-path"
+import appRoot from "app-root-path";
 import confetti from "./confetti.js";
 
 const repoPath = config.repoPath;
@@ -39,7 +39,7 @@ export const downloadThumbnail = async (url, fileName) => {
 export const getFilename = (title) => {
 	return (
 		title
-			.replace(/\W/g, '')
+			.replace(/\W/g, "")
 			.split(" ")
 			.map((word) => word[0].toUpperCase() + word.substring(1))
 			.join("") + ".jpg"
@@ -126,7 +126,7 @@ export const deployPrompt = async () => {
 			console.log("Pushing...");
 			console.log(gitMessage);
 			await commit();
-      confetti();
+			confetti();
 		}
 	});
 };
@@ -135,7 +135,7 @@ export const deployPrompt = async () => {
 export const clearGitPrompt = async () => {
 	inquirer.prompt(gitClear()).then(async (answers) => {
 		if (answers.clear) {
-			clearGitStatus()
+			clearGitStatus();
 		}
 	});
 };
@@ -143,13 +143,54 @@ export const clearGitPrompt = async () => {
 // see the contents of the git log
 export const gitLog = async () => {
 	const gitMessage = await fs.readFile(gitStatusPath, {
-    encoding: "utf-8",
-  });
-  console.log(gitMessage);
+		encoding: "utf-8",
+	});
+	console.log(gitMessage);
 };
 
 // list pages of current books
 export const status = async () => {
 	const books = await getCurrentBooks();
-	console.log(books.map(book => `${book.title} - ${book.progress}/${book.pages}`).join('\n\r'))
-}
+	console.log(
+		books
+			.map((book) => `${book.title} - ${book.progress}/${book.pages}`)
+			.join("\n\r")
+	);
+};
+
+// Title Case
+export const titleCase = (string) => {
+	const lowers = [
+		"a",
+		"an",
+		"the",
+		"and",
+		"but",
+		"or",
+		"for",
+		"nor",
+		"as",
+		"at",
+		"by",
+		"for",
+		"from",
+		"in",
+		"into",
+		"near",
+		"of",
+		"on",
+		"onto",
+		"to",
+		"with",
+	];
+	return string
+		.split(" ")
+		.map((w, i) => {
+			if (i !== 0 && lowers.includes(w.toLowerCase())) {
+				return w.toLowerCase();
+			} else {
+				return w[0].toUpperCase() + w.substring(1).toLowerCase();
+			}
+		})
+		.join(" ");
+};
