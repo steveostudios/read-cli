@@ -1,7 +1,8 @@
 import inquirer from "inquirer";
 import fetch from "node-fetch";
 import { createBook } from "./airtable.js";
-import { deployPrompt, titleCase } from "./helpers.js";
+import { deployPrompt } from "./deploy.js";
+import { titleCase } from "./helpers.js";
 import {
 	createAdditionalInfo,
 	createMain,
@@ -34,7 +35,7 @@ export default function () {
 						author: data.authors.map((item) => item.name).join(", "),
 						pages: data.number_of_pages || answers.pages,
 						cover: [{ url: data?.cover?.medium || answers.imageURL }],
-						// image: filename,
+						image: filename,
 					};
 
 					if (data.subtitle) {

@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import { getReading, updateBook } from "./airtable.js";
-import { deployPrompt } from "./helpers.js";
+import { deployPrompt } from "./deploy.js";
 import { readMain, readResponse } from "./questions.js";
 
 const currentBooks = await getReading();

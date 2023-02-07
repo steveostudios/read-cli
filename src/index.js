@@ -5,9 +5,9 @@ import create from "./create.js";
 import finish from "./finish.js";
 import read from "./read.js";
 import start from "./start.js";
-import { deployPrompt } from "./helpers.js";
 import { initMain } from "./questions.js";
 import confetti from "./confetti.js";
+import { deployPrompt } from "./deploy.js";
 
 const options = {
 	create: "Bought a new book",

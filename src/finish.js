@@ -1,9 +1,9 @@
 import inquirer from "inquirer";
 import { getReading, updateBook } from "./airtable.js";
 import { finishMain } from "./questions.js";
+import { deployPrompt } from "./deploy.js";
 
 import datePrompt from "inquirer-datepicker-prompt";
-import { deployPrompt } from "./helpers.js";
 inquirer.registerPrompt("datetime", datePrompt);
 
 const currentBooks = await getReading();

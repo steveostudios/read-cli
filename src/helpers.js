@@ -1,17 +1,3 @@
-import { deployMain } from "./questions.js";
-import inquirer from "inquirer";
-import confetti from "./confetti.js";
-
-// Prompt whether or not we should deploy
-export const deployPrompt = async () => {
-	inquirer.prompt(deployMain()).then(async (answers) => {
-		if (answers.confirm) {
-			console.log("Pushing...(need to hook up to netlify deploy");
-			confetti();
-		}
-	});
-};
-
 // Title Case
 export const titleCase = (string) => {
 	const lowers = [

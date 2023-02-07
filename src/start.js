@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import { getUnread, updateBook } from "./airtable.js";
 import { startMain, startResponse } from "./questions.js";
 import datePrompt from "inquirer-datepicker-prompt";
-import { deployPrompt } from "./helpers.js";
+import { deployPrompt } from "./deploy.js";
 
 inquirer.registerPrompt("datetime", datePrompt);
 
