@@ -1,25 +1,29 @@
-import inquirer from 'inquirer';
-import {appendGitStatus, getCurrentBooks, updateBook, deployPrompt} from "./helpers.js";
+import inquirer from "inquirer";
+import { getReading, updateBook } from "./airtable.js";
 import { finishMain } from "./questions.js";
 
-import datePrompt from "inquirer-datepicker-prompt"
+import datePrompt from "inquirer-datepicker-prompt";
+import { deployPrompt } from "./helpers.js";
 inquirer.registerPrompt("datetime", datePrompt);
 
-const currentBooks = await getCurrentBooks();
+const currentBooks = await getReading();
 
 export default function () {
-  inquirer
-    .prompt(finishMain(currentBooks))
-    .then(async (answers) => {
-      const book = currentBooks.find(book => book.title === answers.title);
-      const date = answers.date.toISOString().split("T")[0];
-      delete book.progress;
-      const updatedBook = {
-        ...book,
-        stars: answers.stars,
-        dateFinish: date,
-      }
-      await updateBook(updatedBook);
-      await appendGitStatus(`finished "${book.title}"`);
-  }).then(() => deployPrompt());
+	const books = currentBooks;
+
+	inquirer
+		.prompt(finishMain(books))
+		.then(async (answers) => {
+			const book = books.find((book) => book.id === answers.title);
+			const date = answers.date.toISOString().split("T")[0];
+			const updatedBook = {
+				...book,
+				progress: null,
+				stars: answers.stars,
+				dateFinish: date,
+			};
+
+			await updateBook(updatedBook);
+		})
+		.then(() => deployPrompt());
 }

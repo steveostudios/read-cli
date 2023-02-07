@@ -35,6 +35,12 @@ export const createAdditionalInfo = (book) => {
 		name: "imageURL",
 		message: "Missing Image: Where is an image I can use?",
 	};
+	const title = {
+		type: "string",
+		name: "title",
+		message: "Missing Title: What is the title of the book?",
+	};
+	if (!book.title) questions.push(title);
 	if (!book.number_of_pages) questions.push(pages);
 	if (!book?.cover?.medium) questions.push(imageURL);
 
@@ -58,7 +64,9 @@ export const startMain = (books) => {
 			type: "list",
 			message: "What book did you start?",
 			name: "title",
-			choices: books.map((book) => book.title),
+			choices: books.map((book) => {
+				return { name: book.title, value: book.id };
+			}),
 		},
 	];
 };
@@ -98,7 +106,9 @@ export const readMain = (books) => {
 			type: "list",
 			message: "What book did you read?",
 			name: "title",
-			choices: books.map((book) => book.title),
+			choices: books.map((book) => {
+				return { name: book.title, value: book.id };
+			}),
 		},
 	];
 };
@@ -129,7 +139,9 @@ export const finishMain = (books) => {
 			type: "list",
 			message: "What book did you finish?",
 			name: "title",
-			choices: books.map((book) => book.title),
+			choices: books.map((book) => {
+				return { name: book.title, value: book.id };
+			}),
 		},
 		{
 			type: "datetime",
@@ -156,22 +168,12 @@ export const finishMain = (books) => {
 };
 
 // Git
-export const gitMain = () => {
+export const deployMain = () => {
 	return [
 		{
 			type: "confirm",
-			name: "git",
+			name: "confirm",
 			message: "Do you want to deploy?",
-		},
-	];
-};
-
-export const gitClear = () => {
-	return [
-		{
-			type: "confirm",
-			name: "clear",
-			message: "Do you want to clear the git log?",
 		},
 	];
 };

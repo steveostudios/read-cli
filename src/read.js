@@ -1,19 +1,17 @@
 import inquirer from "inquirer";
-import {
-	getCurrentBooks,
-	updateBook,
-	appendGitStatus,
-	deployPrompt,
-} from "./helpers.js";
+import { getReading, updateBook } from "./airtable.js";
+import { deployPrompt } from "./helpers.js";
 import { readMain, readResponse } from "./questions.js";
 
-const currentBooks = await getCurrentBooks();
+const currentBooks = await getReading();
 
 export default function () {
+	const books = currentBooks;
+
 	inquirer
-		.prompt(readMain(currentBooks))
+		.prompt(readMain(books))
 		.then(async (answers) => {
-			return currentBooks.find((book) => book.title === answers.title);
+			return books.find((book) => book.id === answers.title);
 		})
 		.then(async (book) =>
 			inquirer.prompt(readResponse(book)).then(async (answers) => {
@@ -22,7 +20,6 @@ export default function () {
 					progress: answers.page,
 				};
 				await updateBook(updatedBook);
-				await appendGitStatus(`read "${updatedBook.title}"`);
 			})
 		)
 		.then(() => deployPrompt());

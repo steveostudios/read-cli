@@ -5,7 +5,7 @@ import create from "./create.js";
 import finish from "./finish.js";
 import read from "./read.js";
 import start from "./start.js";
-import { clearGitPrompt, commit, deployPrompt, gitLog, status } from "./helpers.js";
+import { deployPrompt } from "./helpers.js";
 import { initMain } from "./questions.js";
 import confetti from "./confetti.js";
 
@@ -14,6 +14,7 @@ const options = {
 	start: "Started a book",
 	read: "Read",
 	finish: "Finished a book",
+	deploy: "Deploy Airtable to Netlify",
 };
 
 // get flags
@@ -30,6 +31,8 @@ const mainMenu = () => {
 			start();
 		} else if (answers.init === options.finish) {
 			finish();
+		} else if (answers.init === options.deploy) {
+			deployPrompt();
 		}
 	});
 };
@@ -46,14 +49,8 @@ if (arg) {
 		finish();
 	} else if (["deploy"].includes(arg)) {
 		deployPrompt();
-	} else if (["clear"].includes(arg)) {
-		clearGitPrompt();
-  } else if (["log"].includes(arg)) {
-		gitLog();
-	} else if (["status"].includes(arg)) {
-		status()
-  } else if (["test"].includes(arg)) {
-    confetti();
+	} else if (["test"].includes(arg)) {
+		confetti();
 	} else {
 		mainMenu();
 	}

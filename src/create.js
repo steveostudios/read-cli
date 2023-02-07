@@ -1,13 +1,7 @@
 import inquirer from "inquirer";
 import fetch from "node-fetch";
-import {
-	appendGitStatus,
-	downloadThumbnail,
-	addBook,
-	getFilename,
-	deployPrompt,
-	titleCase,
-} from "./helpers.js";
+import { createBook } from "./airtable.js";
+import { deployPrompt, titleCase } from "./helpers.js";
 import {
 	createAdditionalInfo,
 	createMain,
@@ -33,15 +27,14 @@ export default function () {
 				.prompt(createAdditionalInfo(data))
 				.then((answers) => {
 					const title = titleCase(data.title);
-					const filename = getFilename(title);
 
 					const book = {
-						isbn: data.isbn,
+						isbn: data.isbn.toString(),
 						title: title,
-						authors: data.authors.map((item) => item.name).join(", "),
+						author: data.authors.map((item) => item.name).join(", "),
 						pages: data.number_of_pages || answers.pages,
-						imageURL: data?.cover?.medium || answers.imageURL,
-						image: filename,
+						cover: [{ url: data?.cover?.medium || answers.imageURL }],
+						// image: filename,
 					};
 
 					if (data.subtitle) {
@@ -54,12 +47,8 @@ export default function () {
 		.then(async (book) =>
 			inquirer.prompt(createResponse(book)).then(async (answers) => {
 				if (answers.response) {
-					if (book.image) {
-						await downloadThumbnail(book.imageURL, book.image);
-						delete book.imageURL;
-					}
-					await addBook(book);
-					await appendGitStatus(`added "${book.title}"`);
+					console.log(book);
+					await createBook(book);
 				}
 			})
 		)
